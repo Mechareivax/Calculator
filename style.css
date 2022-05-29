@@ -1,0 +1,60 @@
+body {
+    height: 100%;
+    width: 100%;
+    background-color: rgb(2 15 44);
+}
+
+button {
+    height: 85px;
+    width: 85px;
+    flex: 1 1 auto;
+    font-size: 30px;
+}
+
+button:hover {
+    background-color: gray;
+}
+
+button:active {
+    background-color: rgb(71, 71, 71);
+    color: white;
+}
+
+button, input {
+    border-style: none;
+    outline: 2px solid gray;
+}
+
+#calculator {
+    margin: auto;
+    height: 550px;
+    width: 550px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#display {
+    flex: 2 1 auto
+}
+
+#equals {
+    background-color: rgb(117, 195, 0);
+}
+
+#equals:hover {
+    background-color: rgb(86, 143, 0);
+}
+
+#equals:active {
+    background-color: rgb(48, 80, 0);
+}
+
+input {
+    width: 166px;
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+}
