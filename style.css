@@ -52,6 +52,8 @@ button, input {
 
 input {
     width: 166px;
+    font-size: 30px;
+    text-align: end;
 }
 
 .row {
