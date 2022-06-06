@@ -1,11 +1,14 @@
-let firstNum = null;
-let secondNum = null;
-let operator = null;
-let result = null;
 const buttons = document.querySelectorAll('button');
 const display = document.querySelector('#display');
 const equalsButton = document.querySelector('#equals');
-const operandButton = document.querySelectorAll(".operand");
+const operandButtons = document.querySelectorAll('.operand');
+const operatorButtons = document.querySelectorAll('.operator');
+const clearButton = document.querySelector('#clear');
+let firstNum = null;
+let secondNum = null;
+let tempNum = null;
+let operator = null;
+let result = null;
 
 function add (a,b) {
     return a+b;
@@ -24,78 +27,92 @@ function divide (a,b) {
 }
 
 function operate (a, currentOperator, b) {
-    let solution;
     
     switch (currentOperator) {
         case 'addition':
-            solution = add(a,b);
-            break;
+            return add(a,b);
         case 'subtraction':
-            solution = subtract(a,b);
-            break;
+            return subtract(a,b);
         case 'multiplication':
-            solution = multiply(a,b);
-            break;
+            return multiply(a,b);
         case 'division':
-            solution = divide(a,b);
-            break;
+            if(b === 0) {
+                return 'Cannot divide by 0';
+            } else {
+                return divide(a,b);
+            }
         default:
             console.log('An error has occurred');
             break;
     }
+}
 
-    return solution;
+function equals () {
+    if(firstNum !== null && operator !== null && secondNum !== null) {
+        return operate(firstNum, operator, secondNum);
+    }
 }
 
 function clear() {
-    // TODO: attach this to the clear button
-    firstNum, secondNum, operator, result = null;
+    firstNum = null;
+    secondNum = null;
+    operator = null;
+    result = null;
 }
 
 function getButtonValue(button) {
-    //get the current button's value
-
+    //TODO: allow the user to enter a number w/multiple digits
+    //maybe put everything in an inputString var and then parse 
+    //the number of that string into firstNum and secondNum
     if (firstNum === null) {
         display.setAttribute('value', button.textContent);
         firstNum = parseFloat(button.textContent);
-        console.log('firstNum is now ' + firstNum);
-    } else if (isOperator(button.textContent)) {
-        operator = button.id;
-        console.log('Current value is an operator: ' + operator);
     } else if (secondNum === null){
         display.setAttribute('value', button.textContent);
         secondNum = parseFloat(button.textContent);
-        console.log('secondNum has been assigned to ' + secondNum);
     } else {
         console.log('an error has occurred');
     }
 }
 
-function isOperator (value) {
-    // return true if selection is an operator
-    //TODO: reeavluate if this is needed now that we have a selector for the operand buttons
-    const validOperators = ['÷', '×', '-', '+'];
-    return validOperators.includes(value);
+function getOperandValue(button) {
+    if(firstNum !== null) {
+        operator = button.id;
+    }
 }
 
 function main () {
-    // TODO: add an event listener to the equals button that will clear the
-    // previous operator and secondNum, while assigning firstNum the value of the solution
-    // maybe move that if statement below into that listener
-    buttons.forEach((button) => {
+    operandButtons.forEach((button) => {
         button.addEventListener('click', (e) => {
-            
-            getButtonValue(e.target);
-
-            if(firstNum && operator && secondNum) {
-                result = operate(firstNum, operator, secondNum);
-                console.log(result);
-            }
-            
+            getButtonValue(e.target); 
         })
     })
 
+    operatorButtons.forEach((button) => {
+        //TODO: let the user click a second operator before clicking
+        //equals. this will operate the previous two nums, display the
+        //result, assign that to the firstNum, and clear the secondNum
+        // similar to the equals button below
+        button.addEventListener('click', (e) => {
+            getOperandValue(e.target);
+        })
+    })
 
+    equalsButton.addEventListener('click', () => {
+        //the equals button will allow for the user to continue to press an operator
+        //and a number, to build on the last result, which is held by tempNum and reassigned
+        //to firstNum
+        result = equals();
+        display.setAttribute('value', result);
+        tempNum = result;
+        clear();
+        firstNum = tempNum;
+    })
+
+    clearButton.addEventListener('click', () =>{
+        clear();
+        display.setAttribute('value', '|');
+    })
 }
 
 main()
