@@ -132,8 +132,8 @@ function main () {
     })
 
     backspaceButton.addEventListener('click', () =>{
-        //TODO: add functionality that erases the last character in inputString
-        //and updates the display
+        inputString = inputString.slice(0, -1);
+        display.setAttribute('value', inputString);
     })
 }
 
