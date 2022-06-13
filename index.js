@@ -4,13 +4,14 @@ const equalsButton = document.querySelector('#equals');
 const operandButtons = document.querySelectorAll('.operand');
 const operatorButtons = document.querySelectorAll('.operator');
 const clearButton = document.querySelector('#clear');
-const backspaceButton = document.querySelector('#backspace')
+const backspaceButton = document.querySelector('#backspace');
+const decimalButton = document.querySelector('#decimal');
 let firstNum = null;
 let secondNum = null;
 let inputString = '';
-let tempNum = null;
 let operator = null;
 let result = null;
+let tempNum = null;
 
 function add (a,b) {
     return a+b;
@@ -75,8 +76,19 @@ function getButtonValue(button) {
 function getOperatorValue(button) {
 
     console.log('you hit ' + button.id);
-    if(inputString !== '') {
-        if(firstNum === null) {
+    if (inputString === '' && tempNum === null) {
+        //if there are no values to pull from, just break out of function
+        console.log('There is nothing in inputString or tempNum');
+        return;
+    }
+
+    if (inputString === '') {
+        //if the inputString contains the default empty string, 
+        //and the user has clicked an operator, then that means 
+        //the user wants to continue the operation with the previous result
+        firstNum = tempNum
+    } else if (inputString !== '') { // if the inputString contains something
+        if (firstNum === null) {
             firstNum = parseFloat(inputString);
             console.log('firstNum is ' + firstNum);
             inputString = '';
@@ -113,27 +125,30 @@ function main () {
     operatorButtons.forEach((button) => {
         button.addEventListener('click', (e) => {
             getOperatorValue(e.target);
-            //TODO: if the user clicks an operator after hitting equals, the
-            //firstNum should be assigned the value in tempNum so the operation can continue
-            //maybe have a boolean that keeps track of that, and manipulate it within
-            // the number buttons?
         })
     })
 
     equalsButton.addEventListener('click', () => {
         calculateAndDisplay();
-        //TODO: if the user clicks an operator after hitting equals, the
-        //firstNum should be assigned the value in tempNum so the operation can continue
     })
 
     clearButton.addEventListener('click', () =>{
         clear();
+        tempNum = null;
         display.setAttribute('value', '|');
     })
 
     backspaceButton.addEventListener('click', () =>{
         inputString = inputString.slice(0, -1);
         display.setAttribute('value', inputString);
+        if (inputString === '') {
+            display.setAttribute('value', '|');
+        }
+    })
+
+    decimalButton.addEventListener('click', () => {
+        //TODO: upon clicking, a decimal is added to the inputString
+        //but only if there isn't a decimal already present
     })
 }
 
