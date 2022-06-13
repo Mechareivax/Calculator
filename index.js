@@ -40,6 +40,7 @@ function operate (a, currentOperator, b) {
             return multiply(a,b);
         case 'division':
             if(b === 0) {
+                secondNum = null;
                 return 'Cannot divide by 0';
             } else {
                 return divide(a,b);
@@ -51,11 +52,10 @@ function operate (a, currentOperator, b) {
 }
 
 function equals () {
-    //This uses the operate function to actually do the math only if
+    //This uses the operate function to do the math only if
     //all values are filled
     if(firstNum !== null && operator !== null) {
         secondNum = parseFloat(inputString);
-        console.log('secondNum is ' + secondNum);
         return operate(firstNum, operator, secondNum);
     }
 }
@@ -70,27 +70,24 @@ function clear() {
 
 function getButtonValue(button) {
     inputString += button.textContent;
-    display.setAttribute('value', inputString);
+    updateDisplay(inputString);
 }
 
 function getOperatorValue(button) {
 
-    console.log('you hit ' + button.id);
     if (inputString === '' && tempNum === null) {
         //if there are no values to pull from, just break out of function
-        console.log('There is nothing in inputString or tempNum');
+        console.log('Error: There is nothing in inputString or tempNum');
         return;
     }
 
     if (inputString === '') {
-        //if the inputString contains the default empty string, 
-        //and the user has clicked an operator, then that means 
-        //the user wants to continue the operation with the previous result
+        //getting to this point means the user wants
+        //to continue the operation with the previous result
         firstNum = tempNum
-    } else if (inputString !== '') { // if the inputString contains something
+    } else if (inputString !== '') {
         if (firstNum === null) {
             firstNum = parseFloat(inputString);
-            console.log('firstNum is ' + firstNum);
             inputString = '';
         } else if (secondNum === null) {
             //at this point, there are two numbers and they clicked the operator twice
@@ -99,7 +96,7 @@ function getOperatorValue(button) {
             calculateAndDisplay();
             firstNum = tempNum;
         } else {
-            console.log('an error has occurred');
+            console.log('An error has occurred');
         }
     }
     operator = button.id;
@@ -109,13 +106,19 @@ function calculateAndDisplay() {
     //puts the last result in tempNum. in case the user wants to continue to
     //operate on it it can be reassigned to firstNum
     result = equals();
-    console.log('result is ' + result);
-    display.setAttribute('value', result);
+    updateDisplay(result);
     tempNum = result;
     clear();
 }
 
+function updateDisplay(value) {
+    display.setAttribute('value', value);
+}
+
+
 function main () {
+    //TODO: have the output rounded to a max of 7 decimals
+
     operandButtons.forEach((button) => {
         button.addEventListener('click', (e) => {
             getButtonValue(e.target); 
@@ -135,20 +138,27 @@ function main () {
     clearButton.addEventListener('click', () =>{
         clear();
         tempNum = null;
-        display.setAttribute('value', '|');
+        updateDisplay('|');
     })
 
     backspaceButton.addEventListener('click', () =>{
         inputString = inputString.slice(0, -1);
-        display.setAttribute('value', inputString);
+        updateDisplay(inputString);
         if (inputString === '') {
-            display.setAttribute('value', '|');
+            updateDisplay('|');
         }
     })
 
     decimalButton.addEventListener('click', () => {
-        //TODO: upon clicking, a decimal is added to the inputString
-        //but only if there isn't a decimal already present
+        // This allows the user to add a decimal, but only if one isn't already present
+
+        if (inputString !== '' && !inputString.includes('.')) {
+            inputString += '.';
+            updateDisplay(inputString);
+        } else if (inputString === '') {
+            inputString = '0.';
+            updateDisplay(inputString);
+        }
     })
 }
 
