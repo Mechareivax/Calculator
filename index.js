@@ -159,6 +159,10 @@ function main () {
             updateDisplay(inputString);
         }
     })
+
+    //Adding keyboard support
+    //if the key pressed is a number between 0 and 9, then add that to the inputString
+    //if the key is an operator
 }
 
 main()
