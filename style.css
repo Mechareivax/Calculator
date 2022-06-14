@@ -56,6 +56,18 @@ input {
     text-align: end;
 }
 
+.operator {
+    background-color: rgb(199, 234, 228);
+}
+
+.operator:hover {
+    background-color: rgb(137, 184, 176);
+}
+
+.operator:active {
+    background-color: rgb(92, 151, 141);
+}
+
 .row {
     display: flex;
     justify-content: center;

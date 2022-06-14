@@ -1,4 +1,3 @@
-const buttons = document.querySelectorAll('button');
 const display = document.querySelector('#display');
 const equalsButton = document.querySelector('#equals');
 const operandButtons = document.querySelectorAll('.operand');
@@ -76,13 +75,13 @@ function getButtonValue(button) {
 function getOperatorValue(button) {
 
     if (inputString === '' && tempNum === null) {
-        //if there are no values to pull from, just break out of function
+        //If there are no values to pull from, just break out of function
         console.log('Error: There is nothing in inputString or tempNum');
         return;
     }
 
     if (inputString === '') {
-        //getting to this point means the user wants
+        //Getting to this point means the user wants
         //to continue the operation with the previous result
         firstNum = tempNum
     } else if (inputString !== '') {
@@ -90,8 +89,8 @@ function getOperatorValue(button) {
             firstNum = parseFloat(inputString);
             inputString = '';
         } else if (secondNum === null) {
-            //at this point, there are two numbers and they clicked the operator twice
-            //this implies that they want the result of the previous two and continue 
+            //At this point, there are two numbers and they clicked the operator twice
+            //This implies that they want the result of the previous two and continue 
             //operating on the result
             calculateAndDisplay();
             firstNum = tempNum;
@@ -103,9 +102,10 @@ function getOperatorValue(button) {
 }
 
 function calculateAndDisplay() {
-    //puts the last result in tempNum. in case the user wants to continue to
+    //Puts the last result in tempNum. In case the user wants to continue to
     //operate on it it can be reassigned to firstNum
     result = equals();
+    result = +result.toFixed(8); // The plus sign will drop any extra zeros at the end
     updateDisplay(result);
     tempNum = result;
     clear();
@@ -117,7 +117,6 @@ function updateDisplay(value) {
 
 
 function main () {
-    //TODO: have the output rounded to a max of 7 decimals
 
     operandButtons.forEach((button) => {
         button.addEventListener('click', (e) => {
