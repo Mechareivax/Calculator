@@ -11,6 +11,24 @@ let inputString = '';
 let operator = null;
 let result = null;
 let tempNum = null;
+let operatorsArr = [
+    {
+        name: '+',
+        id: 'Add'
+    },
+    {
+        name: '-',
+        id: 'Subtract'
+    },
+    {
+        name: '*',
+        id: 'Multiply'
+    },
+    {
+        name: '/',
+        id: 'Divide'
+    },
+];
 
 function add (a,b) {
     return a+b;
@@ -31,13 +49,13 @@ function divide (a,b) {
 function operate (a, currentOperator, b) {
     //This is used in conjunction with the equals() function
     switch (currentOperator) {
-        case 'addition':
+        case 'Add':
             return add(a,b);
-        case 'subtraction':
+        case 'Subtract':
             return subtract(a,b);
-        case 'multiplication':
+        case 'Multiply':
             return multiply(a,b);
-        case 'division':
+        case 'Divide':
             if(b === 0) {
                 secondNum = null;
                 return 'Cannot divide by 0';
@@ -115,6 +133,26 @@ function updateDisplay(value) {
     display.setAttribute('value', value);
 }
 
+function addDecimal () {
+    //Add a decimal, but only if one isn't already present
+
+    if (inputString !== '' && !inputString.includes('.')) {
+        inputString += '.';
+        updateDisplay(inputString);
+    } else if (inputString === '') {
+        inputString = '0.';
+        updateDisplay(inputString);
+    }
+}
+
+function backspace() {
+    inputString = inputString.slice(0, -1);
+    updateDisplay(inputString);
+    if (inputString === '') {
+        updateDisplay('|');
+    }
+}
+
 
 function main () {
 
@@ -141,28 +179,48 @@ function main () {
     })
 
     backspaceButton.addEventListener('click', () =>{
-        inputString = inputString.slice(0, -1);
-        updateDisplay(inputString);
-        if (inputString === '') {
-            updateDisplay('|');
-        }
+        backspace();
     })
 
     decimalButton.addEventListener('click', () => {
-        // This allows the user to add a decimal, but only if one isn't already present
+        addDecimal();
+    })
+    
+    document.addEventListener('keydown', (e) => {
+        let name = e.key;
+        let keyboardOperator = operatorsArr.find(e => e.name == name);
 
-        if (inputString !== '' && !inputString.includes('.')) {
-            inputString += '.';
+        if(!isNaN(name)) {
+            inputString += name;
             updateDisplay(inputString);
-        } else if (inputString === '') {
-            inputString = '0.';
-            updateDisplay(inputString);
+        } else if (keyboardOperator) {
+            /**If keyboardOperator is assigned to a valid object, and not undefined,
+             * then that means that the key pressed was found to be an operator
+             * with an id containing the string of the operation**/
+            getOperatorValue(keyboardOperator);
+        } else {
+            switch (name) {
+                case '.':
+                    addDecimal();
+                    break;
+                case 'Backspace':
+                    backspace();
+                    break;
+                case 'Escape':
+                    clear();
+                    tempNum = null;
+                    updateDisplay('|');
+                    break;
+                case 'Enter':
+                    calculateAndDisplay();
+                    break;
+                default:
+                    console.log('This button is not used');
+                    break;
+            }
         }
     })
-
-    //Adding keyboard support
-    //if the key pressed is a number between 0 and 9, then add that to the inputString
-    //if the key is an operator
+    
 }
 
 main()
